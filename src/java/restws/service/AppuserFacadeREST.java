@@ -5,6 +5,7 @@
  */
 package restws.service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -91,6 +92,24 @@ public class AppuserFacadeREST extends AbstractFacade<Appuser> {
     }
     
     @GET
+    @Path("findByHeight/{height}")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public List<Appuser> findByHeight(@PathParam("height") String height){
+        Query query = em.createNamedQuery("Appuser.findByHeight");
+        query.setParameter("height", new BigDecimal(height));
+        return query.getResultList();
+    }
+    
+    @GET
+    @Path("findByWeight/{weight}")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public List<Appuser> findByWeight(@PathParam("weight") String weight){
+        Query query = em.createNamedQuery("Appuser.findByWeight");
+        query.setParameter("weight", new BigDecimal(weight));
+        return query.getResultList();
+    }
+    
+    @GET
     @Path("findByGender/{gender}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public List<Appuser> findByGender(@PathParam("gender") String gender){
@@ -114,6 +133,24 @@ public class AppuserFacadeREST extends AbstractFacade<Appuser> {
     public List<Appuser> findByPostcode(@PathParam("postcode") String postcode){
         Query query = em.createNamedQuery("Appuser.findByPostcode");
         query.setParameter("postcode", postcode);
+        return query.getResultList();
+    }
+    
+    @GET
+    @Path("findByLevelOfActivity/{levelOfActivity}")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public List<Appuser> findByLevelOfActivity(@PathParam("levelOfActivity") String levelOfActivity){
+        Query query = em.createNamedQuery("Appuser.findByLevelOfActivity");
+        query.setParameter("levelOfActivity", levelOfActivity.charAt(0));
+        return query.getResultList();
+    }
+    
+    @GET
+    @Path("findByStepsPerMile/{stepsPerMile}")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public List<Appuser> findByStepsPerMile(@PathParam("stepsPerMile") Integer stepsPerMile){
+        Query query = em.createNamedQuery("Appuser.findByStepsPerMile");
+        query.setParameter("stepsPerMile", stepsPerMile);
         return query.getResultList();
     }
 
