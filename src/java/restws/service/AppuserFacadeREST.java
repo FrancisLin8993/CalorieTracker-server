@@ -9,6 +9,7 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -60,6 +61,60 @@ public class AppuserFacadeREST extends AbstractFacade<Appuser> {
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Appuser find(@PathParam("id") Integer id) {
         return super.find(id);
+    }
+    
+    @GET
+    @Path("findByFirstname/{firstname}")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public List<Appuser> findByFirstname(@PathParam("firstname") String firstname){
+        Query query = em.createNamedQuery("Appuser.findByFirstname");
+        query.setParameter("firstname", firstname);
+        return query.getResultList();
+    }
+    
+    @GET
+    @Path("findBySurname/{surname}")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public List<Appuser> findByLastname(@PathParam("surname") String surname){
+        Query query = em.createNamedQuery("Appuser.findBySurname");
+        query.setParameter("surname", surname);
+        return query.getResultList();
+    }
+    
+    @GET
+    @Path("findByEmail/{email}")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public List<Appuser> findByEmail(@PathParam("email") String email){
+        Query query = em.createNamedQuery("Appuser.findByEmail");
+        query.setParameter("email", email);
+        return query.getResultList();
+    }
+    
+    @GET
+    @Path("findByGender/{gender}")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public List<Appuser> findByGender(@PathParam("gender") String gender){
+        Query query = em.createNamedQuery("Appuser.findByGender");
+        query.setParameter("gender", gender.charAt(0));
+        return query.getResultList();
+    }
+    
+    @GET
+    @Path("findByAddress/{address}")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public List<Appuser> findByAddress(@PathParam("address") String address){
+        Query query = em.createNamedQuery("Appuser.findByAddress");
+        query.setParameter("address", address);
+        return query.getResultList();
+    }
+    
+    @GET
+    @Path("findByPostcode/{postcode}")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public List<Appuser> findByPostcode(@PathParam("postcode") String postcode){
+        Query query = em.createNamedQuery("Appuser.findByPostcode");
+        query.setParameter("postcode", postcode);
+        return query.getResultList();
     }
 
     @GET
