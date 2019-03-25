@@ -5,10 +5,13 @@
  */
 package restws.service;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -60,6 +63,34 @@ public class CredentialFacadeREST extends AbstractFacade<Credential> {
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Credential find(@PathParam("id") String id) {
         return super.find(id);
+    }
+    
+    @GET
+    @Path("findByUsername/{username}")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public List<Credential> findByUsername(@PathParam("username") String username){
+        Query query = em.createNamedQuery("Credential.findByUsername");
+        query.setParameter("username", username);
+        return query.getResultList();
+    }
+    
+    @GET
+    @Path("findByPasswordHash/{passwordHash}")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public List<Credential> findByPasswordHash(@PathParam("passwordHash") String passwordHash){
+        Query query = em.createNamedQuery("Credential.findByPasswordHash");
+        query.setParameter("passwordHash", passwordHash);
+        return query.getResultList();
+    }
+    
+    @GET
+    @Path("findBySignUpDate/{signUpDate}")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public List<Credential> findBySignUpDate(@PathParam("signUpDate") String signUpDate){
+        Query query = em.createNamedQuery("Credential.findBySignUpDate");
+        Date sqlDate = Date.valueOf(LocalDate.parse(signUpDate));
+        query.setParameter("signUpDate", sqlDate);
+        return query.getResultList();
     }
 
     @GET

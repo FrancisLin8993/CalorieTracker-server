@@ -5,10 +5,13 @@
  */
 package restws.service;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -60,6 +63,25 @@ public class ConsumptionFacadeREST extends AbstractFacade<Consumption> {
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Consumption find(@PathParam("id") Integer id) {
         return super.find(id);
+    }
+    
+    @GET
+    @Path("findByDate/{date}")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public List<Consumption> findByDate(@PathParam("date") String date){
+        Query query = em.createNamedQuery("Consumption.findByDate");
+        Date sqlDate = Date.valueOf(LocalDate.parse(date));
+        query.setParameter("date", sqlDate);
+        return query.getResultList();
+    }
+    
+    @GET
+    @Path("findByQuantity/{quantity}")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public List<Consumption> findByQuantity(@PathParam("quantity") Integer quantity){
+        Query query = em.createNamedQuery("Consumption.findByQuantity");
+        query.setParameter("quantity", quantity);
+        return query.getResultList();
     }
 
     @GET
