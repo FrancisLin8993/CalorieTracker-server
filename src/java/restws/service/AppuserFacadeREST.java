@@ -6,6 +6,8 @@
 package restws.service;
 
 import java.math.BigDecimal;
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -88,6 +90,16 @@ public class AppuserFacadeREST extends AbstractFacade<Appuser> {
     public List<Appuser> findByEmail(@PathParam("email") String email){
         Query query = em.createNamedQuery("Appuser.findByEmail");
         query.setParameter("email", email);
+        return query.getResultList();
+    }
+    
+    @GET
+    @Path("findByDob/{dob}")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public List<Appuser> findByDob(@PathParam("dob") String dob){
+        Query query = em.createNamedQuery("Appuser.findByDob");
+        Date sqlDate = Date.valueOf(LocalDate.parse(dob));
+        query.setParameter("dob", sqlDate);
         return query.getResultList();
     }
     
