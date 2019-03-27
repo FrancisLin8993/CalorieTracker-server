@@ -16,6 +16,7 @@ import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -100,8 +101,8 @@ public class Appuser implements Serializable {
     @NotNull
     @Column(name = "STEPS_PER_MILE")
     private int stepsPerMile;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
-    private Collection<Credential> credentialCollection;
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "userId")
+    private Credential credential;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
     private Collection<Report> reportCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
@@ -224,12 +225,12 @@ public class Appuser implements Serializable {
     }
 
     @XmlTransient
-    public Collection<Credential> getCredentialCollection() {
-        return credentialCollection;
+    public Credential getCredential() {
+        return credential;
     }
 
-    public void setCredentialCollection(Collection<Credential> credentialCollection) {
-        this.credentialCollection = credentialCollection;
+    public void setCredential(Credential credential) {
+        this.credential = credential;
     }
 
     @XmlTransient
