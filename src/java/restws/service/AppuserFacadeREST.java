@@ -191,6 +191,20 @@ public class AppuserFacadeREST extends AbstractFacade<Appuser> {
     public List<Appuser> findRange(@PathParam("from") Integer from, @PathParam("to") Integer to) {
         return super.findRange(new int[]{from, to});
     }
+    
+    @GET
+    @Path("getCaloriesBurnedPerStep/{userId}")
+    @Produces({MediaType.TEXT_PLAIN})
+    public BigDecimal getCaloriesBurnedPerStep(@PathParam("userId") Integer userId){
+        Appuser user = find(userId);
+        int stepsPerMile = user.getStepsPerMile();
+        BigDecimal weight = BigDecimal.valueOf(user.getWeight());
+        weight = weight.multiply(new BigDecimal(2.205));
+        BigDecimal caloriesBurnedPerMile = weight.multiply(new BigDecimal(0.49));      
+        BigDecimal caloriesBurnedPerStep = caloriesBurnedPerMile.divide(new BigDecimal(stepsPerMile));
+        return caloriesBurnedPerStep;
+    }
+
 
     @GET
     @Path("count")
