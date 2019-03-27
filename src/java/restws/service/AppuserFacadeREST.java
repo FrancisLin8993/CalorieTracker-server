@@ -13,6 +13,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -80,6 +81,17 @@ public class AppuserFacadeREST extends AbstractFacade<Appuser> {
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public List<Appuser> findByLastname(@PathParam("surname") String surname){
         Query query = em.createNamedQuery("Appuser.findBySurname");
+        query.setParameter("surname", surname);
+        return query.getResultList();
+    }
+    
+    //Task 3b
+    @GET
+    @Path("findByFirstnameANDSurname/{firstname}/{surname}")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public List<Appuser> findByFirstnameANDSurname(@PathParam("firstname") String firstname, @PathParam("surname") String surname){
+        TypedQuery<Appuser> query = em.createQuery("SELECT a FROM Appuser a WHERE a.firstname = :firstname AND a.surname = :surname", Appuser.class);
+        query.setParameter("firstname", firstname);
         query.setParameter("surname", surname);
         return query.getResultList();
     }

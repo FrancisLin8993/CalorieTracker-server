@@ -12,6 +12,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -99,6 +100,16 @@ public class ConsumptionFacadeREST extends AbstractFacade<Consumption> {
     public List<Consumption> findByUserId(@PathParam("userId") Integer userId){
         Query query = em.createNamedQuery("Consumption.findByUserId");
         query.setParameter("userId", userId);
+        return query.getResultList();
+    }
+    
+    @GET
+    @Path("findByConsumptionIdANDFoodName/{consumptionId}/{foodName}")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public List<Consumption> findByConsumptionIdANDFoodName(@PathParam("consumptionId") Integer consumptionId, @PathParam("foodName") String foodName){
+        TypedQuery<Consumption> query = em.createQuery("SELECT c FROM Consumption c WHERE c.consumptionId = :consumptionId AND c.foodId.name = :foodName", Consumption.class);
+        query.setParameter("consumptionId", consumptionId);
+        query.setParameter("foodName", foodName);
         return query.getResultList();
     }
 
