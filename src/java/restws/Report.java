@@ -31,6 +31,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "Report.findAll", query = "SELECT r FROM Report r")
     , @NamedQuery(name = "Report.findByReportId", query = "SELECT r FROM Report r WHERE r.reportId = :reportId")
+    , @NamedQuery(name = "Report.findByUserId", query = "SELECT r FROM Report r WHERE r.userId.userId = :userId")
     , @NamedQuery(name = "Report.findByDate", query = "SELECT r FROM Report r WHERE r.date = :date")
     , @NamedQuery(name = "Report.findByTotalCalorieConsumed", query = "SELECT r FROM Report r WHERE r.totalCalorieConsumed = :totalCalorieConsumed")
     , @NamedQuery(name = "Report.findByTotalCalorieBurned", query = "SELECT r FROM Report r WHERE r.totalCalorieBurned = :totalCalorieBurned")

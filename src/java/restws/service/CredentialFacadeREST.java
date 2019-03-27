@@ -75,6 +75,15 @@ public class CredentialFacadeREST extends AbstractFacade<Credential> {
     }
     
     @GET
+    @Path("findByUserId/{userId}")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public List<Credential> findByUserId(@PathParam("userId") Integer userId){
+        Query query = em.createNamedQuery("Credential.findByUserId");
+        query.setParameter("userId", userId);
+        return query.getResultList();
+    }
+    
+    @GET
     @Path("findByPasswordHash/{passwordHash}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public List<Credential> findByPasswordHash(@PathParam("passwordHash") String passwordHash){

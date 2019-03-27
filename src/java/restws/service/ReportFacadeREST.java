@@ -66,6 +66,15 @@ public class ReportFacadeREST extends AbstractFacade<Report> {
     }
     
     @GET
+    @Path("findByUserId/{userId}")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public List<Report> findByUserId(@PathParam("userId") Integer userId){
+        Query query = em.createNamedQuery("Report.findByUserId");
+        query.setParameter("userId", userId);
+        return query.getResultList();
+    }
+    
+    @GET
     @Path("findByDate/{date}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public List<Report> findByDate(@PathParam("date") String date){

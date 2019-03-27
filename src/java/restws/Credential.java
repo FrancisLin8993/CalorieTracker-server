@@ -32,6 +32,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "Credential.findAll", query = "SELECT c FROM Credential c")
     , @NamedQuery(name = "Credential.findByUsername", query = "SELECT c FROM Credential c WHERE c.username = :username")
+    , @NamedQuery(name = "Credential.findByUserId", query = "SELECT c FROM Credential c WHERE c.userId.userId = :userId")
     , @NamedQuery(name = "Credential.findByPasswordHash", query = "SELECT c FROM Credential c WHERE c.passwordHash = :passwordHash")
     , @NamedQuery(name = "Credential.findBySignUpDate", query = "SELECT c FROM Credential c WHERE c.signUpDate = :signUpDate")})
 public class Credential implements Serializable {

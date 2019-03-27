@@ -83,6 +83,24 @@ public class ConsumptionFacadeREST extends AbstractFacade<Consumption> {
         query.setParameter("quantity", quantity);
         return query.getResultList();
     }
+    
+    @GET
+    @Path("findByFoodId/{foodId}")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public List<Consumption> findByFoodId(@PathParam("foodId") Integer foodId){
+        Query query = em.createNamedQuery("Consumption.findByFoodId");
+        query.setParameter("foodId", foodId);
+        return query.getResultList();
+    }
+    
+    @GET
+    @Path("findByUserId/{userId}")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public List<Consumption> findByUserId(@PathParam("userId") Integer userId){
+        Query query = em.createNamedQuery("Consumption.findByUserId");
+        query.setParameter("userId", userId);
+        return query.getResultList();
+    }
 
     @GET
     @Override
