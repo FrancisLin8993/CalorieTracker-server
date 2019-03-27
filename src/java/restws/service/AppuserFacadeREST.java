@@ -6,6 +6,7 @@
 package restws.service;
 
 import java.math.BigDecimal;
+import static java.math.RoundingMode.HALF_UP;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
@@ -201,7 +202,7 @@ public class AppuserFacadeREST extends AbstractFacade<Appuser> {
         BigDecimal weight = BigDecimal.valueOf(user.getWeight());
         weight = weight.multiply(new BigDecimal(2.205));
         BigDecimal caloriesBurnedPerMile = weight.multiply(new BigDecimal(0.49));      
-        BigDecimal caloriesBurnedPerStep = caloriesBurnedPerMile.divide(new BigDecimal(stepsPerMile));
+        BigDecimal caloriesBurnedPerStep = caloriesBurnedPerMile.divide(new BigDecimal(stepsPerMile), 3, HALF_UP);
         return caloriesBurnedPerStep;
     }
 
