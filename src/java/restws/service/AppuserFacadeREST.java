@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 import static java.math.RoundingMode.HALF_UP;
 import java.sql.Date;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -194,9 +195,9 @@ public class AppuserFacadeREST extends AbstractFacade<Appuser> {
     }
     
     @GET
-    @Path("getCaloriesBurnedPerStep/{userId}")
+    @Path("calculateCaloriesBurnedPerStep/{userId}")
     @Produces({MediaType.TEXT_PLAIN})
-    public BigDecimal getCaloriesBurnedPerStep(@PathParam("userId") Integer userId){
+    public BigDecimal calculateCaloriesBurnedPerStep(@PathParam("userId") Integer userId){
         Appuser user = find(userId);
         int stepsPerMile = user.getStepsPerMile();
         BigDecimal weight = BigDecimal.valueOf(user.getWeight());
@@ -204,6 +205,38 @@ public class AppuserFacadeREST extends AbstractFacade<Appuser> {
         BigDecimal caloriesBurnedPerMile = weight.multiply(new BigDecimal(0.49));      
         BigDecimal caloriesBurnedPerStep = caloriesBurnedPerMile.divide(new BigDecimal(stepsPerMile), 3, HALF_UP);
         return caloriesBurnedPerStep;
+    }
+    
+    @GET
+    @Path("calculateBMR/{userId}")
+    @Produces({MediaType.TEXT_PLAIN})
+    public BigDecimal calculateBMR(@PathParam("userId") Integer userId){
+        //Retrieve the user 
+        Appuser user = find(userId);
+        //Get the value of corresponding attributes
+        char gender = user.getGender();
+        BigDecimal height = BigDecimal.valueOf(user.getHeight());
+        BigDecimal weight = BigDecimal.valueOf(user.getWeight());
+        //Convert sql Date to java LocalDate
+        LocalDate dob = LocalDate.parse(user.getDob().toString());
+        LocalDate currentDate = LocalDate.now();
+        //Calculate age
+        long age = ChronoUnit.YEARS.between(currentDate, dob);
+        BigDecimal BigDecimalAge = new BigDecimal(age);
+        BigDecimal bmr = BigDecimal.ZERO;
+        //Calculate bmr
+        if (gender == 'M') {
+            bmr = weight.multiply(new BigDecimal(13.75))
+                    .add(height.multiply(new BigDecimal(5.003)))
+                    .subtract(BigDecimalAge.multiply(new BigDecimal(6.755)))
+                    .add(new BigDecimal(66.5));        
+        } else if (gender == 'F') {
+            bmr = weight.multiply(new BigDecimal(9.563))
+                    .add(height.multiply(new BigDecimal(1.85)))
+                    .subtract(BigDecimalAge.multiply(new BigDecimal(4.676)))
+                    .add(new BigDecimal(655.1));
+        }
+        return bmr;
     }
 
 
