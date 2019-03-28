@@ -125,18 +125,6 @@ public class ReportFacadeREST extends AbstractFacade<Report> {
         return query.getResultList();
     }
     
-    @GET
-    @Path("findByUserIdANDdate/{userId}/{date}")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public List<Report> findByUserIdANDdate(@PathParam("userId") Integer userId,
-            @PathParam("date") String date) {
-        TypedQuery<Report> query = em.createQuery("SELECT r FROM Report r WHERE r.userId.userId = :userId AND r.date = :date", Report.class);
-        query.setParameter("userId", userId);
-        Date sqlDate = Date.valueOf(LocalDate.parse(date));
-        query.setParameter("date", sqlDate);
-        return query.getResultList();
-    }
-    
     //Task 5a
     @GET
     @Path("calculateCalories/{userId}/{date}")
