@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 import static java.math.RoundingMode.HALF_UP;
 import java.sql.Date;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -219,25 +220,26 @@ public class AppuserFacadeREST extends AbstractFacade<Appuser> {
         BigDecimal height = BigDecimal.valueOf(user.getHeight());
         BigDecimal weight = BigDecimal.valueOf(user.getWeight());
         //Convert sql Date to java LocalDate
-        LocalDate dob = LocalDate.parse(user.getDob().toString());
+        //LocalDate dob = LocalDate.parse(user.getDob().toString());
+        LocalDate dob = user.getDob().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         LocalDate currentDate = LocalDate.now();
         //Calculate age
         long age = ChronoUnit.YEARS.between(currentDate, dob);
-        BigDecimal BigDecimalAge = new BigDecimal(age);
+        BigDecimal bigDecimalAge = new BigDecimal(age);
         BigDecimal bmr = BigDecimal.ZERO;
         //Calculate bmr
         if (gender == 'M') {
             bmr = weight.multiply(new BigDecimal(13.75))
                     .add(height.multiply(new BigDecimal(5.003)))
-                    .subtract(BigDecimalAge.multiply(new BigDecimal(6.755)))
+                    .subtract(bigDecimalAge.multiply(new BigDecimal(6.755)))
                     .add(new BigDecimal(66.5));        
         } else if (gender == 'F') {
             bmr = weight.multiply(new BigDecimal(9.563))
                     .add(height.multiply(new BigDecimal(1.85)))
-                    .subtract(BigDecimalAge.multiply(new BigDecimal(4.676)))
+                    .subtract(bigDecimalAge.multiply(new BigDecimal(4.676)))
                     .add(new BigDecimal(655.1));
         }
-        return bmr;
+        return bmr.setScale(3, HALF_UP);
     }
     
     //Task 4c

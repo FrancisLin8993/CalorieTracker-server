@@ -7,7 +7,6 @@ package restws.service;
 
 import java.sql.Date;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -24,7 +23,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import restws.Consumption;
-import restws.Food;
 
 /**
  *
@@ -67,82 +65,81 @@ public class ConsumptionFacadeREST extends AbstractFacade<Consumption> {
     public Consumption find(@PathParam("id") Integer id) {
         return super.find(id);
     }
-    
+
     @GET
     @Path("findByDate/{date}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public List<Consumption> findByDate(@PathParam("date") String date){
+    public List<Consumption> findByDate(@PathParam("date") String date) {
         Query query = em.createNamedQuery("Consumption.findByDate");
         Date sqlDate = Date.valueOf(LocalDate.parse(date));
         query.setParameter("date", sqlDate);
         return query.getResultList();
     }
-    
+
     @GET
     @Path("findByQuantity/{quantity}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public List<Consumption> findByQuantity(@PathParam("quantity") Integer quantity){
+    public List<Consumption> findByQuantity(@PathParam("quantity") Integer quantity) {
         Query query = em.createNamedQuery("Consumption.findByQuantity");
         query.setParameter("quantity", quantity);
         return query.getResultList();
     }
-    
+
     @GET
     @Path("findByFoodId/{foodId}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public List<Consumption> findByFoodId(@PathParam("foodId") Integer foodId){
+    public List<Consumption> findByFoodId(@PathParam("foodId") Integer foodId) {
         Query query = em.createNamedQuery("Consumption.findByFoodId");
         query.setParameter("foodId", foodId);
         return query.getResultList();
     }
-    
+
     @GET
     @Path("findByUserId/{userId}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public List<Consumption> findByUserId(@PathParam("userId") Integer userId){
+    public List<Consumption> findByUserId(@PathParam("userId") Integer userId) {
         Query query = em.createNamedQuery("Consumption.findByUserId");
         query.setParameter("userId", userId);
         return query.getResultList();
     }
-    
+
     @GET
     @Path("findByUserIdANDdate/{userId}/{date}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public List<Consumption> findByUserIdANDdate(@PathParam("userId") Integer userId,
-            @PathParam("date") String date){
+            @PathParam("date") String date) {
         TypedQuery<Consumption> query = em.createQuery("SELECT c FROM Consumption c WHERE c.userId.userId = :userId AND c.date = :date", Consumption.class);
         query.setParameter("userId", userId);
         Date sqlDate = Date.valueOf(LocalDate.parse(date));
         query.setParameter("date", sqlDate);
         return query.getResultList();
     }
-    
+
     //Task 3c
     @GET
     @Path("findByConsumptionIdANDFoodName/{consumptionId}/{foodName}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public List<Consumption> findByConsumptionIdANDFoodName(@PathParam("consumptionId") Integer consumptionId, 
-            @PathParam("foodName") String foodName){
+    public List<Consumption> findByConsumptionIdANDFoodName(@PathParam("consumptionId") Integer consumptionId,
+            @PathParam("foodName") String foodName) {
         TypedQuery<Consumption> query = em.createQuery("SELECT c FROM Consumption c WHERE c.consumptionId = :consumptionId AND c.foodId.name = :foodName", Consumption.class);
         query.setParameter("consumptionId", consumptionId);
         query.setParameter("foodName", foodName);
         return query.getResultList();
     }
-    
+
     //Task 4d
     @GET
     @Path("calculateTotalCaloriesConsumed/{userId}/{date}")
     @Produces({MediaType.TEXT_PLAIN})
     public Integer calculateTotalCaloriesConsumed(@PathParam("userId") Integer userId,
-            @PathParam("date") String date){
-        int totalCaloriesConsumed = 0;
+            @PathParam("date") String date) {
         //Retrieve the consumption list by userId and date
         List<Consumption> consumptionList = findByUserIdANDdate(userId, date);
         //Calculate the calorie of individual food and add up       
-        totalCaloriesConsumed = consumptionList.stream().mapToInt(consumption -> {
-            return consumption.getFoodId().getCalorieAmount() * consumption.getQuantity();    
+        int totalCaloriesConsumed = consumptionList.stream().mapToInt(consumption -> {
+            return consumption.getFoodId().getCalorieAmount() * consumption.getQuantity();
         }).sum();
-        return totalCaloriesConsumed;    
+        return totalCaloriesConsumed;
     }
 
     @GET
@@ -170,5 +167,5 @@ public class ConsumptionFacadeREST extends AbstractFacade<Consumption> {
     protected EntityManager getEntityManager() {
         return em;
     }
-    
+
 }
