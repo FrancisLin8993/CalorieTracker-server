@@ -9,9 +9,14 @@ import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 import javax.ejb.Stateless;
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonObject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -118,6 +123,44 @@ public class ReportFacadeREST extends AbstractFacade<Report> {
         Query query = em.createNamedQuery("Report.findByCalorieGoal");
         query.setParameter("calorieGoal", calorieGoal);
         return query.getResultList();
+    }
+    
+    @GET
+    @Path("findByUserIdANDdate/{userId}/{date}")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public List<Report> findByUserIdANDdate(@PathParam("userId") Integer userId,
+            @PathParam("date") String date) {
+        TypedQuery<Report> query = em.createQuery("SELECT r FROM Report r WHERE r.userId.userId = :userId AND r.date = :date", Report.class);
+        query.setParameter("userId", userId);
+        Date sqlDate = Date.valueOf(LocalDate.parse(date));
+        query.setParameter("date", sqlDate);
+        return query.getResultList();
+    }
+    
+    //Task 5a
+    @GET
+    @Path("calculateCalories/{userId}/{date}")
+    @Produces({MediaType.APPLICATION_JSON})
+    public Object calculateCalories(@PathParam("userId") Integer userId, 
+            @PathParam("date") String date){
+        
+        TypedQuery<Object[]> query = em.createQuery("SELECT r.totalCalorieConsumed, r.totalCalorieBurned, r.calorieGoal FROM Report r WHERE r.userId.userId = :userId AND r.date = :date", Object[].class);
+        query.setParameter("userId", userId);
+        Date sqlDate = Date.valueOf(LocalDate.parse(date));
+        query.setParameter("date", sqlDate);
+        List<Object[]> reportList = query.getResultList();
+        
+        JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
+        for (Object[] row : reportList) {
+            int remainingCalories = (int)row[2] - ((int)row[0] - (int)row[1]);
+            JsonObject resultObject = Json.createObjectBuilder()
+                    .add("totalCalorieConsumed", (String.valueOf(row[0])))
+                    .add("totalCalorieBurned", (String.valueOf(row[1])))
+                    .add("remainingCalories", (String.valueOf(remainingCalories))).build();
+            arrayBuilder.add(resultObject);
+        }
+        JsonArray jsonArray = arrayBuilder.build();
+        return jsonArray;    
     }
 
     @GET
