@@ -247,12 +247,12 @@ public class AppuserFacadeREST extends AbstractFacade<Appuser> {
     public Integer calculateTotalCaloriesBurned(@PathParam("userId") Integer userId){
         Appuser user = find(userId);
         char levelOfActivity = user.getLevelOfActivity();
-        //Define the 0.175 difference of the coefficient in the formula between adjacent level of activity
+        //Define the 0.175 difference of the multiplied numbers in the formula between adjacent level of activity
         BigDecimal baseDifference = new BigDecimal(0.175);
-        //Calculate the total difference needed to be added to the coefficient based on level of activities of users.
+        //Calculate the total difference needed to be added to the multiplied number based on level of activities of users.
         //For example, if a user's level of activity is 3,
         //The total difference should be 0.175 * (3 - 1) = 0.35
-        //So the coeffient of the formula should be 1.2 + 0.35 = 1.55
+        //So the multiplied number of the formula should be 1.2 + 0.35 = 1.55
         BigDecimal difference = baseDifference.multiply(new BigDecimal(Character.getNumericValue(levelOfActivity) - 1));
         BigDecimal bmr = calculateBMR(userId);
         

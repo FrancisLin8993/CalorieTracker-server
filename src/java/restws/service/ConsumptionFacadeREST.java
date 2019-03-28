@@ -7,6 +7,7 @@ package restws.service;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -23,6 +24,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import restws.Consumption;
+import restws.Food;
 
 /**
  *
@@ -103,6 +105,18 @@ public class ConsumptionFacadeREST extends AbstractFacade<Consumption> {
         return query.getResultList();
     }
     
+    @GET
+    @Path("findByUserIdANDdate/{userId}/{date}")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public List<Consumption> findByUserIdANDdate(@PathParam("userId") Integer userId,
+            @PathParam("date") String date){
+        TypedQuery<Consumption> query = em.createQuery("SELECT c FROM Consumption c WHERE c.userId.userId = :userId AND c.date = :date", Consumption.class);
+        query.setParameter("userId", userId);
+        Date sqlDate = Date.valueOf(LocalDate.parse(date));
+        query.setParameter("date", sqlDate);
+        return query.getResultList();
+    }
+    
     //Task 3c
     @GET
     @Path("findByConsumptionIdANDFoodName/{consumptionId}/{foodName}")
@@ -113,6 +127,22 @@ public class ConsumptionFacadeREST extends AbstractFacade<Consumption> {
         query.setParameter("consumptionId", consumptionId);
         query.setParameter("foodName", foodName);
         return query.getResultList();
+    }
+    
+    //Task 4d
+    @GET
+    @Path("calculateTotalCaloriesConsumed/{userId}/{date}")
+    @Produces({MediaType.TEXT_PLAIN})
+    public Integer calculateTotalCaloriesConsumed(@PathParam("userId") Integer userId,
+            @PathParam("date") String date){
+        int totalCaloriesConsumed = 0;
+        //Retrieve the consumption list by userId and date
+        List<Consumption> consumptionList = findByUserIdANDdate(userId, date);
+        //Calculate the calorie of individual food and add up       
+        totalCaloriesConsumed = consumptionList.stream().mapToInt(consumption -> {
+            return consumption.getFoodId().getCalorieAmount() * consumption.getQuantity();    
+        }).sum();
+        return totalCaloriesConsumed;    
     }
 
     @GET
