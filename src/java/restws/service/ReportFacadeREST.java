@@ -70,6 +70,7 @@ public class ReportFacadeREST extends AbstractFacade<Report> {
         return super.find(id);
     }
     
+    //Task 2a
     @GET
     @Path("findByUserId/{userId}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})

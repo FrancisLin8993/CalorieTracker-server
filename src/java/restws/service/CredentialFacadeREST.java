@@ -74,6 +74,7 @@ public class CredentialFacadeREST extends AbstractFacade<Credential> {
         return query.getResultList();
     }
     
+    //Task 2a
     @GET
     @Path("findByUserId/{userId}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
@@ -102,7 +103,7 @@ public class CredentialFacadeREST extends AbstractFacade<Credential> {
         return query.getResultList();
     }
     
-    //task 3d
+    //Task 3d
     @GET
     @Path("findByUsernameAndEmail/{username}/{email}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})

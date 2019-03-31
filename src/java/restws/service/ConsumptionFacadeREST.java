@@ -85,6 +85,7 @@ public class ConsumptionFacadeREST extends AbstractFacade<Consumption> {
         return query.getResultList();
     }
 
+    //Task 2a
     @GET
     @Path("findByFoodId/{foodId}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
@@ -94,6 +95,7 @@ public class ConsumptionFacadeREST extends AbstractFacade<Consumption> {
         return query.getResultList();
     }
 
+    //Task 2a
     @GET
     @Path("findByUserId/{userId}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
@@ -103,6 +105,7 @@ public class ConsumptionFacadeREST extends AbstractFacade<Consumption> {
         return query.getResultList();
     }
 
+    //Task 3b
     @GET
     @Path("findByUserIdANDdate/{userId}/{date}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
@@ -117,12 +120,12 @@ public class ConsumptionFacadeREST extends AbstractFacade<Consumption> {
 
     //Task 3c
     @GET
-    @Path("findByConsumptionIdANDFoodName/{consumptionId}/{foodName}")
+    @Path("findByQuantityANDFoodName/{quantity}/{foodName}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public List<Consumption> findByConsumptionIdANDFoodName(@PathParam("consumptionId") Integer consumptionId,
+    public List<Consumption> findByQuantityANDFoodName(@PathParam("quantity") Integer quantity,
             @PathParam("foodName") String foodName) {
-        TypedQuery<Consumption> query = em.createQuery("SELECT c FROM Consumption c WHERE c.consumptionId = :consumptionId AND c.foodId.name = :foodName", Consumption.class);
-        query.setParameter("consumptionId", consumptionId);
+        TypedQuery<Consumption> query = em.createQuery("SELECT c FROM Consumption c WHERE c.quantity = :quantity AND c.foodId.name = :foodName", Consumption.class);
+        query.setParameter("quantity", quantity);
         query.setParameter("foodName", foodName);
         return query.getResultList();
     }

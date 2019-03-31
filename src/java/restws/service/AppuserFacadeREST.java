@@ -195,6 +195,7 @@ public class AppuserFacadeREST extends AbstractFacade<Appuser> {
         return super.findRange(new int[]{from, to});
     }
     
+    //Task 4a
     @GET
     @Path("calculateCaloriesBurnedPerStep/{userId}")
     @Produces({MediaType.TEXT_PLAIN})
@@ -220,7 +221,6 @@ public class AppuserFacadeREST extends AbstractFacade<Appuser> {
         BigDecimal height = BigDecimal.valueOf(user.getHeight());
         BigDecimal weight = BigDecimal.valueOf(user.getWeight());
         //Convert sql Date to java LocalDate
-        //LocalDate dob = LocalDate.parse(user.getDob().toString());
         LocalDate dob = user.getDob().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         LocalDate currentDate = LocalDate.now();
         //Calculate age
