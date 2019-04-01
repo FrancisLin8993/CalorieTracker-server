@@ -244,9 +244,9 @@ public class AppuserFacadeREST extends AbstractFacade<Appuser> {
     
     //Task 4c
     @GET
-    @Path("calculateTotalCaloriesBurned/{userId}")
+    @Path("calculateTotalCaloriesBurnedAtRest/{userId}")
     @Produces({MediaType.TEXT_PLAIN})
-    public Integer calculateTotalCaloriesBurned(@PathParam("userId") Integer userId){
+    public Integer calculateTotalCaloriesBurnedAtRest(@PathParam("userId") Integer userId){
         Appuser user = find(userId);
         char levelOfActivity = user.getLevelOfActivity();
         //Define the 0.175 difference of the multiplied numbers in the formula between adjacent level of activity
