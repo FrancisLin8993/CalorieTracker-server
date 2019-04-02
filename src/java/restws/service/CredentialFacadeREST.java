@@ -40,14 +40,14 @@ public class CredentialFacadeREST extends AbstractFacade<Credential> {
 
     @POST
     @Override
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
     public void create(Credential entity) {
         super.create(entity);
     }
 
     @PUT
     @Path("{id}")
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
     public void edit(@PathParam("id") String id, Credential entity) {
         super.edit(entity);
     }
@@ -60,14 +60,14 @@ public class CredentialFacadeREST extends AbstractFacade<Credential> {
 
     @GET
     @Path("{id}")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     public Credential find(@PathParam("id") String id) {
         return super.find(id);
     }
     
     @GET
     @Path("findByUsername/{username}")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     public List<Credential> findByUsername(@PathParam("username") String username){
         Query query = em.createNamedQuery("Credential.findByUsername");
         query.setParameter("username", username);
@@ -77,7 +77,7 @@ public class CredentialFacadeREST extends AbstractFacade<Credential> {
     //Task 2a
     @GET
     @Path("findByUserId/{userId}")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     public List<Credential> findByUserId(@PathParam("userId") Integer userId){
         Query query = em.createNamedQuery("Credential.findByUserId");
         query.setParameter("userId", userId);
@@ -86,7 +86,7 @@ public class CredentialFacadeREST extends AbstractFacade<Credential> {
     
     @GET
     @Path("findByPasswordHash/{passwordHash}")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     public List<Credential> findByPasswordHash(@PathParam("passwordHash") String passwordHash){
         Query query = em.createNamedQuery("Credential.findByPasswordHash");
         query.setParameter("passwordHash", passwordHash);
@@ -95,7 +95,7 @@ public class CredentialFacadeREST extends AbstractFacade<Credential> {
     
     @GET
     @Path("findBySignUpDate/{signUpDate}")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     public List<Credential> findBySignUpDate(@PathParam("signUpDate") String signUpDate){
         Query query = em.createNamedQuery("Credential.findBySignUpDate");
         Date sqlDate = Date.valueOf(LocalDate.parse(signUpDate));
@@ -106,7 +106,7 @@ public class CredentialFacadeREST extends AbstractFacade<Credential> {
     //Task 3d
     @GET
     @Path("findByUsernameAndEmail/{username}/{email}")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     public List<Credential> findByUsernameAndEmail(@PathParam("username") String username, @PathParam("email") String email){
         Query query = em.createNamedQuery("Credential.findByUsernameAndEmail");
         query.setParameter("username", username);
@@ -116,14 +116,14 @@ public class CredentialFacadeREST extends AbstractFacade<Credential> {
 
     @GET
     @Override
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     public List<Credential> findAll() {
         return super.findAll();
     }
 
     @GET
     @Path("{from}/{to}")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     public List<Credential> findRange(@PathParam("from") Integer from, @PathParam("to") Integer to) {
         return super.findRange(new int[]{from, to});
     }

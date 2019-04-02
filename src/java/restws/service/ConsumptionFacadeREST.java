@@ -9,6 +9,10 @@ import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 import javax.ejb.Stateless;
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonObject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -41,14 +45,14 @@ public class ConsumptionFacadeREST extends AbstractFacade<Consumption> {
 
     @POST
     @Override
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
     public void create(Consumption entity) {
         super.create(entity);
     }
 
     @PUT
     @Path("{id}")
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
     public void edit(@PathParam("id") Integer id, Consumption entity) {
         super.edit(entity);
     }
@@ -61,14 +65,14 @@ public class ConsumptionFacadeREST extends AbstractFacade<Consumption> {
 
     @GET
     @Path("{id}")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     public Consumption find(@PathParam("id") Integer id) {
         return super.find(id);
     }
 
     @GET
     @Path("findByDate/{date}")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     public List<Consumption> findByDate(@PathParam("date") String date) {
         Query query = em.createNamedQuery("Consumption.findByDate");
         Date sqlDate = Date.valueOf(LocalDate.parse(date));
@@ -78,7 +82,7 @@ public class ConsumptionFacadeREST extends AbstractFacade<Consumption> {
 
     @GET
     @Path("findByQuantity/{quantity}")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     public List<Consumption> findByQuantity(@PathParam("quantity") Integer quantity) {
         Query query = em.createNamedQuery("Consumption.findByQuantity");
         query.setParameter("quantity", quantity);
@@ -88,7 +92,7 @@ public class ConsumptionFacadeREST extends AbstractFacade<Consumption> {
     //Task 2a
     @GET
     @Path("findByFoodId/{foodId}")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     public List<Consumption> findByFoodId(@PathParam("foodId") Integer foodId) {
         Query query = em.createNamedQuery("Consumption.findByFoodId");
         query.setParameter("foodId", foodId);
@@ -98,7 +102,7 @@ public class ConsumptionFacadeREST extends AbstractFacade<Consumption> {
     //Task 2a
     @GET
     @Path("findByUserId/{userId}")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     public List<Consumption> findByUserId(@PathParam("userId") Integer userId) {
         Query query = em.createNamedQuery("Consumption.findByUserId");
         query.setParameter("userId", userId);
@@ -108,7 +112,7 @@ public class ConsumptionFacadeREST extends AbstractFacade<Consumption> {
     //Task 3b
     @GET
     @Path("findByUserIdANDdate/{userId}/{date}")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     public List<Consumption> findByUserIdANDdate(@PathParam("userId") Integer userId,
             @PathParam("date") String date) {
         TypedQuery<Consumption> query = em.createQuery("SELECT c FROM Consumption c WHERE c.userId.userId = :userId AND c.date = :date", Consumption.class);
@@ -121,7 +125,7 @@ public class ConsumptionFacadeREST extends AbstractFacade<Consumption> {
     //Task 3c
     @GET
     @Path("findByQuantityANDFoodName/{quantity}/{foodName}")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     public List<Consumption> findByQuantityANDFoodName(@PathParam("quantity") Integer quantity,
             @PathParam("foodName") String foodName) {
         TypedQuery<Consumption> query = em.createQuery("SELECT c FROM Consumption c WHERE c.quantity = :quantity AND c.foodId.name = :foodName", Consumption.class);
@@ -133,8 +137,8 @@ public class ConsumptionFacadeREST extends AbstractFacade<Consumption> {
     //Task 4d
     @GET
     @Path("calculateTotalCaloriesConsumed/{userId}/{date}")
-    @Produces({MediaType.TEXT_PLAIN})
-    public Integer calculateTotalCaloriesConsumed(@PathParam("userId") Integer userId,
+    @Produces({MediaType.APPLICATION_JSON})
+    public JsonArray calculateTotalCaloriesConsumed(@PathParam("userId") Integer userId,
             @PathParam("date") String date) {
         //Retrieve the consumption list by userId and date
         List<Consumption> consumptionList = findByUserIdANDdate(userId, date);
@@ -142,19 +146,26 @@ public class ConsumptionFacadeREST extends AbstractFacade<Consumption> {
         int totalCaloriesConsumed = consumptionList.stream().mapToInt(consumption -> {
             return consumption.getFoodId().getCalorieAmount() * consumption.getQuantity();
         }).sum();
-        return totalCaloriesConsumed;
+        //form the result into json format
+        JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();        
+        JsonObject resultObject = Json.createObjectBuilder()
+                .add("totalCaloriesConsumed", totalCaloriesConsumed)
+                .build();
+        arrayBuilder.add(resultObject);        
+        JsonArray jsonArray = arrayBuilder.build();
+        return jsonArray;     
     }
 
     @GET
     @Override
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     public List<Consumption> findAll() {
         return super.findAll();
     }
 
     @GET
     @Path("{from}/{to}")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     public List<Consumption> findRange(@PathParam("from") Integer from, @PathParam("to") Integer to) {
         return super.findRange(new int[]{from, to});
     }

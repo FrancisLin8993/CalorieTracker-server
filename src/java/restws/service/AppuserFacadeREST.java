@@ -13,6 +13,10 @@ import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import javax.ejb.Stateless;
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonObject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -45,14 +49,14 @@ public class AppuserFacadeREST extends AbstractFacade<Appuser> {
 
     @POST
     @Override
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
     public void create(Appuser entity) {
         super.create(entity);
     }
 
     @PUT
     @Path("{id}")
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
     public void edit(@PathParam("id") Integer id, Appuser entity) {
         super.edit(entity);
     }
@@ -65,14 +69,14 @@ public class AppuserFacadeREST extends AbstractFacade<Appuser> {
 
     @GET
     @Path("{id}")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     public Appuser find(@PathParam("id") Integer id) {
         return super.find(id);
     }
     
     @GET
     @Path("findByFirstname/{firstname}")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     public List<Appuser> findByFirstname(@PathParam("firstname") String firstname){
         Query query = em.createNamedQuery("Appuser.findByFirstname");
         query.setParameter("firstname", firstname);
@@ -81,7 +85,7 @@ public class AppuserFacadeREST extends AbstractFacade<Appuser> {
     
     @GET
     @Path("findBySurname/{surname}")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     public List<Appuser> findByLastname(@PathParam("surname") String surname){
         Query query = em.createNamedQuery("Appuser.findBySurname");
         query.setParameter("surname", surname);
@@ -91,7 +95,7 @@ public class AppuserFacadeREST extends AbstractFacade<Appuser> {
     //Task 3b
     @GET
     @Path("findByFirstnameANDSurname/{firstname}/{surname}")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     public List<Appuser> findByFirstnameANDSurname(@PathParam("firstname") String firstname, @PathParam("surname") String surname){
         TypedQuery<Appuser> query = em.createQuery("SELECT a FROM Appuser a WHERE a.firstname = :firstname AND a.surname = :surname", Appuser.class);
         query.setParameter("firstname", firstname);
@@ -101,7 +105,7 @@ public class AppuserFacadeREST extends AbstractFacade<Appuser> {
     
     @GET
     @Path("findByEmail/{email}")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     public List<Appuser> findByEmail(@PathParam("email") String email){
         Query query = em.createNamedQuery("Appuser.findByEmail");
         query.setParameter("email", email);
@@ -110,7 +114,7 @@ public class AppuserFacadeREST extends AbstractFacade<Appuser> {
     
     @GET
     @Path("findByDob/{dob}")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     public List<Appuser> findByDob(@PathParam("dob") String dob){
         Query query = em.createNamedQuery("Appuser.findByDob");
         Date sqlDate = Date.valueOf(LocalDate.parse(dob));
@@ -120,7 +124,7 @@ public class AppuserFacadeREST extends AbstractFacade<Appuser> {
     
     @GET
     @Path("findByHeight/{height}")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     public List<Appuser> findByHeight(@PathParam("height") String height){
         Query query = em.createNamedQuery("Appuser.findByHeight");
         query.setParameter("height", new BigDecimal(height));
@@ -129,7 +133,7 @@ public class AppuserFacadeREST extends AbstractFacade<Appuser> {
     
     @GET
     @Path("findByWeight/{weight}")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     public List<Appuser> findByWeight(@PathParam("weight") String weight){
         Query query = em.createNamedQuery("Appuser.findByWeight");
         query.setParameter("weight", new BigDecimal(weight));
@@ -138,7 +142,7 @@ public class AppuserFacadeREST extends AbstractFacade<Appuser> {
     
     @GET
     @Path("findByGender/{gender}")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     public List<Appuser> findByGender(@PathParam("gender") String gender){
         Query query = em.createNamedQuery("Appuser.findByGender");
         query.setParameter("gender", gender.charAt(0));
@@ -147,7 +151,7 @@ public class AppuserFacadeREST extends AbstractFacade<Appuser> {
     
     @GET
     @Path("findByAddress/{address}")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     public List<Appuser> findByAddress(@PathParam("address") String address){
         Query query = em.createNamedQuery("Appuser.findByAddress");
         query.setParameter("address", address);
@@ -156,7 +160,7 @@ public class AppuserFacadeREST extends AbstractFacade<Appuser> {
     
     @GET
     @Path("findByPostcode/{postcode}")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     public List<Appuser> findByPostcode(@PathParam("postcode") String postcode){
         Query query = em.createNamedQuery("Appuser.findByPostcode");
         query.setParameter("postcode", postcode);
@@ -165,7 +169,7 @@ public class AppuserFacadeREST extends AbstractFacade<Appuser> {
     
     @GET
     @Path("findByLevelOfActivity/{levelOfActivity}")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     public List<Appuser> findByLevelOfActivity(@PathParam("levelOfActivity") String levelOfActivity){
         Query query = em.createNamedQuery("Appuser.findByLevelOfActivity");
         query.setParameter("levelOfActivity", levelOfActivity.charAt(0));
@@ -174,7 +178,7 @@ public class AppuserFacadeREST extends AbstractFacade<Appuser> {
     
     @GET
     @Path("findByStepsPerMile/{stepsPerMile}")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     public List<Appuser> findByStepsPerMile(@PathParam("stepsPerMile") Integer stepsPerMile){
         Query query = em.createNamedQuery("Appuser.findByStepsPerMile");
         query.setParameter("stepsPerMile", stepsPerMile);
@@ -183,14 +187,14 @@ public class AppuserFacadeREST extends AbstractFacade<Appuser> {
 
     @GET
     @Override
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     public List<Appuser> findAll() {
         return super.findAll();
     }
 
     @GET
     @Path("{from}/{to}")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     public List<Appuser> findRange(@PathParam("from") Integer from, @PathParam("to") Integer to) {
         return super.findRange(new int[]{from, to});
     }
@@ -198,22 +202,29 @@ public class AppuserFacadeREST extends AbstractFacade<Appuser> {
     //Task 4a
     @GET
     @Path("calculateCaloriesBurnedPerStep/{userId}")
-    @Produces({MediaType.TEXT_PLAIN})
-    public BigDecimal calculateCaloriesBurnedPerStep(@PathParam("userId") Integer userId){
+    @Produces({MediaType.APPLICATION_JSON})
+    public JsonArray calculateCaloriesBurnedPerStep(@PathParam("userId") Integer userId){
         Appuser user = find(userId);
         int stepsPerMile = user.getStepsPerMile();
         BigDecimal weight = BigDecimal.valueOf(user.getWeight());
         weight = weight.multiply(new BigDecimal(2.205));
         BigDecimal caloriesBurnedPerMile = weight.multiply(new BigDecimal(0.49));      
         BigDecimal caloriesBurnedPerStep = caloriesBurnedPerMile.divide(new BigDecimal(stepsPerMile), 3, HALF_UP);
-        return caloriesBurnedPerStep;
+        //form the result into json format
+        JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
+        JsonObject resultObject = Json.createObjectBuilder()
+                .add("caloriesBurnedPerStep", caloriesBurnedPerStep)
+                .build();
+        arrayBuilder.add(resultObject);
+        JsonArray jsonArray = arrayBuilder.build();
+        return jsonArray;
     }
     
     //Task 4b
     @GET
     @Path("calculateBMR/{userId}")
-    @Produces({MediaType.TEXT_PLAIN})
-    public BigDecimal calculateBMR(@PathParam("userId") Integer userId){
+    @Produces({MediaType.APPLICATION_JSON})
+    public JsonArray calculateBMR(@PathParam("userId") Integer userId){
         //Retrieve the user 
         Appuser user = find(userId);
         //Get the value of corresponding attributes
@@ -239,14 +250,21 @@ public class AppuserFacadeREST extends AbstractFacade<Appuser> {
                     .subtract(bigDecimalAge.multiply(new BigDecimal(4.676)))
                     .add(new BigDecimal(655.1));
         }
-        return bmr.setScale(3, HALF_UP);
+        //form the result into json format
+        JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
+        JsonObject resultObject = Json.createObjectBuilder()
+                .add("bmr", bmr.setScale(3, HALF_UP))
+                .build();
+        arrayBuilder.add(resultObject);
+        JsonArray jsonArray = arrayBuilder.build();
+        return jsonArray;
     }
     
     //Task 4c
     @GET
     @Path("calculateTotalCaloriesBurnedAtRest/{userId}")
-    @Produces({MediaType.TEXT_PLAIN})
-    public Integer calculateTotalCaloriesBurnedAtRest(@PathParam("userId") Integer userId){
+    @Produces({MediaType.APPLICATION_JSON})
+    public JsonArray calculateTotalCaloriesBurnedAtRest(@PathParam("userId") Integer userId){
         Appuser user = find(userId);
         char levelOfActivity = user.getLevelOfActivity();
         //Define the 0.175 difference of the multiplied numbers in the formula between adjacent level of activity
@@ -256,10 +274,17 @@ public class AppuserFacadeREST extends AbstractFacade<Appuser> {
         //The total difference should be 0.175 * (3 - 1) = 0.35
         //So the multiplied number of the formula should be 1.2 + 0.35 = 1.55
         BigDecimal difference = baseDifference.multiply(new BigDecimal(Character.getNumericValue(levelOfActivity) - 1));
-        BigDecimal bmr = calculateBMR(userId);
+        BigDecimal bmr = new BigDecimal(calculateBMR(userId).getJsonObject(0).getInt("bmr"));
+        BigDecimal totalCaloriesBurnedAtRest = bmr.multiply(new BigDecimal(1.2).add(difference));
+        //form the result into json format
+        JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();        
+        JsonObject resultObject = Json.createObjectBuilder()
+                .add("totalCaloriesBurnedAtRest", totalCaloriesBurnedAtRest.setScale(3, HALF_UP))
+                .build();
+        arrayBuilder.add(resultObject);
         
-        BigDecimal totalCalories = bmr.multiply(new BigDecimal(1.2).add(difference));
-        return totalCalories.intValue();
+        JsonArray jsonArray = arrayBuilder.build();
+        return jsonArray;         
     }
 
 

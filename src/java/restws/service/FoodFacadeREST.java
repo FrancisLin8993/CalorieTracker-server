@@ -39,14 +39,14 @@ public class FoodFacadeREST extends AbstractFacade<Food> {
 
     @POST
     @Override
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
     public void create(Food entity) {
         super.create(entity);
     }
 
     @PUT
     @Path("{id}")
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
     public void edit(@PathParam("id") Integer id, Food entity) {
         super.edit(entity);
     }
@@ -59,14 +59,14 @@ public class FoodFacadeREST extends AbstractFacade<Food> {
 
     @GET
     @Path("{id}")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     public Food find(@PathParam("id") Integer id) {
         return super.find(id);
     }
     
     @GET
     @Path("findByName/{name}")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     public List<Food> findByName(@PathParam("name") String name){
         Query query = em.createNamedQuery("Food.findByName");
         query.setParameter("name", name);
@@ -75,7 +75,7 @@ public class FoodFacadeREST extends AbstractFacade<Food> {
     
     @GET
     @Path("findByCategory/{category}")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     public List<Food> findByCategory(@PathParam("category") String category){
         Query query = em.createNamedQuery("Food.findByCategory");
         query.setParameter("category", category);
@@ -84,7 +84,7 @@ public class FoodFacadeREST extends AbstractFacade<Food> {
     
     @GET
     @Path("findByCalorieAmount/{calorieAmount}")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     public List<Food> findByCalorieAmount(@PathParam("calorieAmount") Integer calorieAmount){
         Query query = em.createNamedQuery("Food.findByCalorieAmount");
         query.setParameter("calorieAmount", calorieAmount);
@@ -93,7 +93,7 @@ public class FoodFacadeREST extends AbstractFacade<Food> {
     
     @GET
     @Path("findByServingUnit/{servingUnit}")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     public List<Food> findByServingUnit(@PathParam("servingUnit") String servingUnit){
         Query query = em.createNamedQuery("Food.findByServingUnit");
         query.setParameter("servingUnit", servingUnit);
@@ -102,7 +102,7 @@ public class FoodFacadeREST extends AbstractFacade<Food> {
     
     @GET
     @Path("findByFat/{fat}")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     public List<Food> findByFat(@PathParam("fat") Integer fat){
         Query query = em.createNamedQuery("Food.findByFat");
         query.setParameter("fat", fat);
@@ -111,7 +111,7 @@ public class FoodFacadeREST extends AbstractFacade<Food> {
     
     @GET
     @Path("findByServingAmount/{servingAmount}")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     public List<Food> findByServingAmount(@PathParam("servingAmount") String servingAmount){
         Query query = em.createNamedQuery("Food.findByServingAmount");
         query.setParameter("servingAmount", new BigDecimal(servingAmount));
@@ -120,14 +120,14 @@ public class FoodFacadeREST extends AbstractFacade<Food> {
 
     @GET
     @Override
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     public List<Food> findAll() {
         return super.findAll();
     }
 
     @GET
     @Path("{from}/{to}")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     public List<Food> findRange(@PathParam("from") Integer from, @PathParam("to") Integer to) {
         return super.findRange(new int[]{from, to});
     }

@@ -52,7 +52,7 @@ public class ReportFacadeREST extends AbstractFacade<Report> {
 
     @PUT
     @Path("{id}")
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
     public void edit(@PathParam("id") Integer id, Report entity) {
         super.edit(entity);
     }
@@ -65,7 +65,7 @@ public class ReportFacadeREST extends AbstractFacade<Report> {
 
     @GET
     @Path("{id}")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     public Report find(@PathParam("id") Integer id) {
         return super.find(id);
     }
@@ -73,7 +73,7 @@ public class ReportFacadeREST extends AbstractFacade<Report> {
     //Task 2a
     @GET
     @Path("findByUserId/{userId}")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     public List<Report> findByUserId(@PathParam("userId") Integer userId){
         Query query = em.createNamedQuery("Report.findByUserId");
         query.setParameter("userId", userId);
@@ -82,7 +82,7 @@ public class ReportFacadeREST extends AbstractFacade<Report> {
     
     @GET
     @Path("findByDate/{date}")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     public List<Report> findByDate(@PathParam("date") String date){
         Query query = em.createNamedQuery("Report.findByDate");
         Date sqlDate = Date.valueOf(LocalDate.parse(date));
@@ -92,7 +92,7 @@ public class ReportFacadeREST extends AbstractFacade<Report> {
     
     @GET
     @Path("findByTotalCalorieConsumed/{totalCalorieConsumed}")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     public List<Report> findByTotalCalorieConsumed(@PathParam("totalCalorieConsumed") Integer totalCalorieConsumed){
         Query query = em.createNamedQuery("Report.findByTotalCalorieConsumed");
         query.setParameter("totalCalorieConsumed", totalCalorieConsumed);
@@ -101,7 +101,7 @@ public class ReportFacadeREST extends AbstractFacade<Report> {
     
     @GET
     @Path("findByTotalCalorieBurned/{totalCalorieBurned}")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     public List<Report> findByTotalCalorieBurned(@PathParam("totalCalorieBurned") Integer totalCalorieBurned){
         Query query = em.createNamedQuery("Report.findByTotalCalorieBurned");
         query.setParameter("totalCalorieBurned", totalCalorieBurned);
@@ -110,7 +110,7 @@ public class ReportFacadeREST extends AbstractFacade<Report> {
     
     @GET
     @Path("findByTotalSteps/{totalSteps}")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     public List<Report> findByTotalSteps(@PathParam("totalSteps") Integer totalSteps){
         Query query = em.createNamedQuery("Report.findByTotalSteps");
         query.setParameter("totalSteps", totalSteps);
@@ -119,7 +119,7 @@ public class ReportFacadeREST extends AbstractFacade<Report> {
     
     @GET
     @Path("findByCalorieGoal/{calorieGoal}")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     public List<Report> findByCalorieGoal(@PathParam("calorieGoal") Integer calorieGoal){
         Query query = em.createNamedQuery("Report.findByCalorieGoal");
         query.setParameter("calorieGoal", calorieGoal);
@@ -187,14 +187,14 @@ public class ReportFacadeREST extends AbstractFacade<Report> {
 
     @GET
     @Override
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     public List<Report> findAll() {
         return super.findAll();
     }
 
     @GET
     @Path("{from}/{to}")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     public List<Report> findRange(@PathParam("from") Integer from, @PathParam("to") Integer to) {
         return super.findRange(new int[]{from, to});
     }
