@@ -14,8 +14,6 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.json.Json;
-import javax.json.JsonArray;
-import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -203,28 +201,26 @@ public class AppuserFacadeREST extends AbstractFacade<Appuser> {
     @GET
     @Path("calculateCaloriesBurnedPerStep/{userId}")
     @Produces({MediaType.APPLICATION_JSON})
-    public JsonArray calculateCaloriesBurnedPerStep(@PathParam("userId") Integer userId){
+    public JsonObject calculateCaloriesBurnedPerStep(@PathParam("userId") Integer userId){
         Appuser user = find(userId);
         int stepsPerMile = user.getStepsPerMile();
         BigDecimal weight = BigDecimal.valueOf(user.getWeight());
+        //Convert the weight in pound
         weight = weight.multiply(new BigDecimal(2.205));
         BigDecimal caloriesBurnedPerMile = weight.multiply(new BigDecimal(0.49));      
         BigDecimal caloriesBurnedPerStep = caloriesBurnedPerMile.divide(new BigDecimal(stepsPerMile), 3, HALF_UP);
         //form the result into json format
-        JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
         JsonObject resultObject = Json.createObjectBuilder()
                 .add("caloriesBurnedPerStep", caloriesBurnedPerStep)
                 .build();
-        arrayBuilder.add(resultObject);
-        JsonArray jsonArray = arrayBuilder.build();
-        return jsonArray;
+        return resultObject;
     }
     
     //Task 4b
     @GET
     @Path("calculateBMR/{userId}")
     @Produces({MediaType.APPLICATION_JSON})
-    public JsonArray calculateBMR(@PathParam("userId") Integer userId){
+    public JsonObject calculateBMR(@PathParam("userId") Integer userId){
         //Retrieve the user 
         Appuser user = find(userId);
         //Get the value of corresponding attributes
@@ -235,8 +231,8 @@ public class AppuserFacadeREST extends AbstractFacade<Appuser> {
         LocalDate dob = user.getDob().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         LocalDate currentDate = LocalDate.now();
         //Calculate age
-        long age = ChronoUnit.YEARS.between(currentDate, dob);
-        BigDecimal bigDecimalAge = new BigDecimal(age);
+        long age = ChronoUnit.YEARS.between(dob, currentDate);
+        BigDecimal bigDecimalAge = BigDecimal.valueOf(age);
         BigDecimal bmr = BigDecimal.ZERO;
         //Calculate bmr
         if (gender == 'M') {
@@ -251,20 +247,17 @@ public class AppuserFacadeREST extends AbstractFacade<Appuser> {
                     .add(new BigDecimal(655.1));
         }
         //form the result into json format
-        JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
         JsonObject resultObject = Json.createObjectBuilder()
                 .add("bmr", bmr.setScale(3, HALF_UP))
                 .build();
-        arrayBuilder.add(resultObject);
-        JsonArray jsonArray = arrayBuilder.build();
-        return jsonArray;
+        return resultObject;
     }
     
     //Task 4c
     @GET
     @Path("calculateTotalCaloriesBurnedAtRest/{userId}")
     @Produces({MediaType.APPLICATION_JSON})
-    public JsonArray calculateTotalCaloriesBurnedAtRest(@PathParam("userId") Integer userId){
+    public JsonObject calculateTotalCaloriesBurnedAtRest(@PathParam("userId") Integer userId){
         Appuser user = find(userId);
         char levelOfActivity = user.getLevelOfActivity();
         //Define the 0.175 difference of the multiplied numbers in the formula between adjacent level of activity
@@ -274,17 +267,13 @@ public class AppuserFacadeREST extends AbstractFacade<Appuser> {
         //The total difference should be 0.175 * (3 - 1) = 0.35
         //So the multiplied number of the formula should be 1.2 + 0.35 = 1.55
         BigDecimal difference = baseDifference.multiply(new BigDecimal(Character.getNumericValue(levelOfActivity) - 1));
-        BigDecimal bmr = new BigDecimal(calculateBMR(userId).getJsonObject(0).getInt("bmr"));
+        BigDecimal bmr = calculateBMR(userId).getJsonNumber("bmr").bigDecimalValue();
         BigDecimal totalCaloriesBurnedAtRest = bmr.multiply(new BigDecimal(1.2).add(difference));
         //form the result into json format
-        JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();        
         JsonObject resultObject = Json.createObjectBuilder()
-                .add("totalCaloriesBurnedAtRest", totalCaloriesBurnedAtRest.setScale(3, HALF_UP))
+                .add("totalCaloriesBurnedAtRest", totalCaloriesBurnedAtRest.setScale(0, HALF_UP))
                 .build();
-        arrayBuilder.add(resultObject);
-        
-        JsonArray jsonArray = arrayBuilder.build();
-        return jsonArray;         
+        return resultObject;       
     }
 
 

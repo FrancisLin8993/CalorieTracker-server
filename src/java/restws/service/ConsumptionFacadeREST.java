@@ -138,7 +138,7 @@ public class ConsumptionFacadeREST extends AbstractFacade<Consumption> {
     @GET
     @Path("calculateTotalCaloriesConsumed/{userId}/{date}")
     @Produces({MediaType.APPLICATION_JSON})
-    public JsonArray calculateTotalCaloriesConsumed(@PathParam("userId") Integer userId,
+    public JsonObject calculateTotalCaloriesConsumed(@PathParam("userId") Integer userId,
             @PathParam("date") String date) {
         //Retrieve the consumption list by userId and date
         List<Consumption> consumptionList = findByUserIdANDdate(userId, date);
@@ -147,13 +147,10 @@ public class ConsumptionFacadeREST extends AbstractFacade<Consumption> {
             return consumption.getFoodId().getCalorieAmount() * consumption.getQuantity();
         }).sum();
         //form the result into json format
-        JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();        
         JsonObject resultObject = Json.createObjectBuilder()
                 .add("totalCaloriesConsumed", totalCaloriesConsumed)
                 .build();
-        arrayBuilder.add(resultObject);        
-        JsonArray jsonArray = arrayBuilder.build();
-        return jsonArray;     
+        return resultObject;     
     }
 
     @GET
