@@ -35,7 +35,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "Credential.findByUserId", query = "SELECT c FROM Credential c WHERE c.userId.userId = :userId")
     , @NamedQuery(name = "Credential.findByPasswordHash", query = "SELECT c FROM Credential c WHERE c.passwordHash = :passwordHash")
     , @NamedQuery(name = "Credential.findBySignUpDate", query = "SELECT c FROM Credential c WHERE c.signUpDate = :signUpDate")
-    , @NamedQuery(name = "Credential.findByUsernameAndEmail", query = "SELECT c FROM Credential c WHERE c.username = :username AND c.userId.email = :email")})
+    , @NamedQuery(name = "Credential.findByUsernameAndEmail", query = "SELECT c FROM Credential c WHERE c.username = :username AND c.userId.email = :email")
+    , @NamedQuery(name = "Credential.findUserByUsername", query = "SELECT c.userId FROM Credential c WHERE c.username = :username")})
 public class Credential implements Serializable {
 
     private static final long serialVersionUID = 1L;

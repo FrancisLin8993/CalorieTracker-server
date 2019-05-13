@@ -275,7 +275,17 @@ public class AppuserFacadeREST extends AbstractFacade<Appuser> {
                 .build();
         return resultObject;       
     }
-
+    
+    @GET
+    @Path("checkIfEmailExist/{email}")
+    @Produces(MediaType.TEXT_PLAIN)
+    public boolean checkIfEmailExist(@PathParam("email") String email){
+        List<Appuser> userList = findByEmail(email);
+        if (userList.size() > 0)
+            return true;
+        else
+            return false;
+    }
 
     @GET
     @Path("count")

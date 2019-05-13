@@ -21,6 +21,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import restws.Appuser;
 import restws.Credential;
 
 /**
@@ -113,6 +114,15 @@ public class CredentialFacadeREST extends AbstractFacade<Credential> {
         query.setParameter("email", email);
         return query.getResultList();
     }
+    
+    @GET
+    @Path("findUserByUsername/{username}")
+    @Produces({MediaType.APPLICATION_JSON})
+    public Appuser findUserByUsername(@PathParam("username") String username){
+        Query query = em.createNamedQuery("Credential.findUserByUsername");
+        query.setParameter("username", username);
+        return (Appuser)query.getSingleResult();
+    }
 
     @GET
     @Override
@@ -126,6 +136,32 @@ public class CredentialFacadeREST extends AbstractFacade<Credential> {
     @Produces({MediaType.APPLICATION_JSON})
     public List<Credential> findRange(@PathParam("from") Integer from, @PathParam("to") Integer to) {
         return super.findRange(new int[]{from, to});
+    }
+    
+    @GET
+    @Path("checkIfUsernameExist/{username}")
+    @Produces(MediaType.TEXT_PLAIN)
+    public boolean checkIfUsernameExist(@PathParam("username") String username){
+        List<Credential> credentialList = findByUsername(username);
+        if (credentialList.size() > 0)
+            return true;
+        else
+            return false;
+    }
+    
+    @GET
+    @Path("checkIfPasswordCorrect/{username}/{passwordHash}")
+    @Produces(MediaType.TEXT_PLAIN)
+    public boolean checkIfPasswordCorrect(@PathParam("username") String username, 
+            @PathParam("passwordHash") String passwordHash){
+        List<Credential> credentialList = findByUsername(username);
+        Credential credential = credentialList.get(0);
+        if (credential.getPasswordHash().equals(passwordHash)){
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
     @GET

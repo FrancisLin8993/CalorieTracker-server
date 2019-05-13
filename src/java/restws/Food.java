@@ -48,7 +48,7 @@ public class Food implements Serializable {
     private Integer foodId;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 100)
+    @Size(min = 1, max = 500)
     @Column(name = "NAME")
     private String name;
     @Basic(optional = false)
