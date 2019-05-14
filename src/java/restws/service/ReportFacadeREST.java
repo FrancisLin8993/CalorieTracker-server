@@ -5,11 +5,16 @@
  */
 package restws.service;
 
+import java.math.BigDecimal;
 import java.sql.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -172,6 +177,33 @@ public class ReportFacadeREST extends AbstractFacade<Report> {
                 .add("totalSteps", (String.valueOf(totalSteps)))
                 .build();
         return resultObject;    
+    }
+    
+    @GET
+    @Path("getCaloriesPerDay/{userId}/{startDate}/{endDate}")
+    @Produces({MediaType.APPLICATION_JSON})
+    public JsonArray getCaloriesPerDay(@PathParam("userId") Integer userId, 
+            @PathParam("startDate") String startDate, @PathParam("endDate") String endDate){
+        TypedQuery<Object[]> query = em.createQuery("SELECT r.totalCalorieConsumed, r.totalCalorieBurned, r.date FROM Report r WHERE r.userId.userId = :userId AND r.date BETWEEN :startDate AND :endDate", Object[].class);
+        query.setParameter("userId", userId);
+        Date sqlStartDate = Date.valueOf(LocalDate.parse(startDate));
+        query.setParameter("startDate", sqlStartDate);
+        Date sqlEndDate = Date.valueOf(LocalDate.parse(endDate));
+        query.setParameter("endDate", sqlEndDate);
+        List<Object[]> reportList = query.getResultList();
+        
+        JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        for (Object[] row : reportList) {
+            String strDate = dateFormat.format(row[2]);
+            JsonObject dayObject = Json.createObjectBuilder()
+                    .add("calorieConsumed", (Integer)row[0])
+                    .add("calorieBurned", (Integer)row[1])
+                    .add("date", strDate).build();
+            arrayBuilder.add(dayObject);
+        }
+        JsonArray jArray = arrayBuilder.build();
+        return jArray;
     }
 
     @GET
