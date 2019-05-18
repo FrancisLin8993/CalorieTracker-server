@@ -138,6 +138,7 @@ public class CredentialFacadeREST extends AbstractFacade<Credential> {
         return super.findRange(new int[]{from, to});
     }
     
+    // Check whether a username exists
     @GET
     @Path("checkIfUsernameExist/{username}")
     @Produces(MediaType.TEXT_PLAIN)
@@ -149,6 +150,7 @@ public class CredentialFacadeREST extends AbstractFacade<Credential> {
             return false;
     }
     
+    // Check whether the password of a user is correct
     @GET
     @Path("checkIfPasswordCorrect/{username}/{passwordHash}")
     @Produces(MediaType.TEXT_PLAIN)

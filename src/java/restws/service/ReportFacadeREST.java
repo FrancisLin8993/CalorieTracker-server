@@ -179,6 +179,7 @@ public class ReportFacadeREST extends AbstractFacade<Report> {
         return resultObject;    
     }
     
+    // Get calories info per day for the Android bar chart 
     @GET
     @Path("getCaloriesPerDay/{userId}/{startDate}/{endDate}")
     @Produces({MediaType.APPLICATION_JSON})
